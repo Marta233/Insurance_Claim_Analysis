@@ -6,7 +6,7 @@ import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
+sns.set(style="whitegrid")
 class InsuranceBasicStast:
     def __init__(self, df):
         self.df = df
@@ -60,14 +60,12 @@ class InsuranceBasicStast:
 
     def rename_variable_value_name(self):
         logging.info("Renaming variable values")
-        self.df['Gender'] = self.df['Gender'].replace({'Not specified': np.nan})
-        self.df['MaritalStatus'] = self.df['MaritalStatus'].replace({'Not specified': np.nan})
-        logging.info("Exiting rename_variable_value_name")
-
+        self.df['Gender'] = self.df['Gender'].fillna('Not specified')
+        self.df['MaritalStatus'] = self.df['MaritalStatus'].fillna('Not specified')
     def univariate_analysis_plot(self):
         logging.info("Generating univariate analysis plots for numeric")
         self.fill_numeri_by_mean()
-        numerical_cols = ['NumberOfDoors', 'SumInsured', 'CalculatedPremiumPerTerm', 'TotalClaims']
+        numerical_cols = ['NumberOfDoors','PostalCode','kilowatts', 'SumInsured', 'CalculatedPremiumPerTerm', 'TotalClaims']
         
         # Calculate the number of rows needed (2 plots per row)
         num_rows = (len(numerical_cols) + 1) // 2  # Use integer division to determine rows needed
@@ -160,15 +158,59 @@ class InsuranceBasicStast:
 
     def plot_Vehicle_premium(self):
         logging.info("Plotting vehicle premium distribution")
-        plt.figure(figsize=(10, 6))
-        sns.boxplot(data=self.df, x='VehicleType', y='TotalPremium')
-        plt.title('Total Premium Distribution by Vehicle Type')
+        
+        # Box plot for Total Premium by Vehicle Type
+        plt.figure(figsize=(12, 6))
+        sns.boxplot(data=self.df, x='VehicleType', y='TotalPremium', palette='Set2')
+        plt.title('Total Premium Distribution by Vehicle Type', fontsize=16)
         plt.xticks(rotation=45)
-        plt.xlabel('Vehicle Type')
-        plt.ylabel('Total Premium')
+        plt.xlabel('Vehicle Type', fontsize=14)
+        plt.ylabel('Total Premium', fontsize=14)
+        plt.grid(True)
         plt.tight_layout()
         plt.show()
+        
+        # Bar plot for Total Premium by Vehicle Type and Country
+        plt.figure(figsize=(14, 7))
+        sns.barplot(data=self.df, x='VehicleType', y='TotalPremium', hue='Province', ci=None, palette='pastel')
+        plt.title('Average Total Premium by Vehicle Type and Country', fontsize=16)
+        plt.xticks(rotation=45)
+        plt.xlabel('Vehicle Type', fontsize=14)
+        plt.ylabel('Average Total Premium', fontsize=14)
+        plt.legend(title='Country', fontsize=12)
+        plt.grid(axis='y')
+        plt.tight_layout()
+        plt.show()
+        
         logging.info("Exiting plot_Vehicle_premium")
+
+    def plot_Vehicle_TotalClaims(self):
+        logging.info("Plotting vehicle total claims distribution")
+        
+        # Box plot for Total Claims by Vehicle Type
+        plt.figure(figsize=(12, 6))
+        sns.boxplot(data=self.df, x='VehicleType', y='TotalClaims', palette='Set2')
+        plt.title('Total Claims Distribution by Vehicle Type', fontsize=16)
+        plt.xticks(rotation=45)
+        plt.xlabel('Vehicle Type', fontsize=14)
+        plt.ylabel('Total Claims', fontsize=14)
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+        
+        # Bar plot for Total Claims by Vehicle Type and Country
+        plt.figure(figsize=(14, 7))
+        sns.barplot(data=self.df, x='VehicleType', y='TotalClaims', hue='Province', ci=None, palette='pastel')
+        plt.title('Average Total Claims by Vehicle Type and Country', fontsize=16)
+        plt.xticks(rotation=45)
+        plt.xlabel('Vehicle Type', fontsize=14)
+        plt.ylabel('Average Total Claims', fontsize=14)
+        plt.legend(title='Country', fontsize=12)
+        plt.grid(axis='y')
+        plt.tight_layout()
+        plt.show()
+        
+        logging.info("Exiting plot_Vehicle_TotalClaims")
 
     def outlier_all_num_co(self):
         logging.info("Checking for outliers in numeric columns")

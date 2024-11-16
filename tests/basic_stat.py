@@ -83,6 +83,71 @@ class TestInsuranceBasicStast(unittest.TestCase):
         }).sort_values(by='data_typs', ascending=False)
         result = self.insurance.data_types()
         pd.testing.assert_frame_equal(result, expected)
+    def test_missing_percentage(self):
+        expected = pd.DataFrame({
+            'Column': self.df.columns,
+            'Missing Percentage': self.df.isnull().sum() / len(self.df) * 100
+        }).sort_values(by='Missing Percentage', ascending=False)
+
+        result = self.insurance.missing_percentage()
+
+        pd.testing.assert_frame_equal(result.reset_index(drop=True), expected.reset_index(drop=True))
+    def test_fill_numeri_by_mean(self):
+        original_sum_insured = self.df['SumInsured'].copy()
+        self.insurance.fill_numeri_by_mean()
+        # Check if NaN values in numeric columns are filled
+        self.assertFalse(self.df['TotalPremium'].isnull().any())
+        self.assertFalse(self.df['TotalClaims'].isnull().any())
+        self.assertFalse(self.df['SumInsured'].isnull().any())
+        self.assertNotEqual(original_sum_insured.isnull().sum(), self.df['SumInsured'].isnull().sum())
+
+    def test_univariate_analysis_plot(self):
+        try:
+            self.insurance.univariate_analysis_plot()
+        except Exception as e:
+            self.fail(f"univariate_analysis_plot raised an exception: {e}")
+
+    def test_univariant_catagor_attri(self):
+        try:
+            self.insurance.univariant_catagor_attri()
+        except Exception as e:
+            self.fail(f"univariant_catagor_attri raised an exception: {e}")
+
+    def test_bivariate_analysis(self):
+        try:
+            self.insurance.bivariate_analysis()
+        except Exception as e:
+            self.fail(f"bivariate_analysis raised an exception: {e}")
+
+    def test_bivariate_scatter_plot(self):
+        try:
+            self.insurance.bivariate_scatter_plot()
+        except Exception as e:
+            self.fail(f"bivariate_scatter_plot raised an exception: {e}")
+
+    def test_analyze_insurance_trends(self):
+        try:
+            self.insurance.analyze_insurance_trends()
+        except Exception as e:
+            self.fail(f"analyze_insurance_trends raised an exception: {e}")
+
+    def test_plot_vehicle_premium(self):
+        try:
+            self.insurance.plot_Vehicle_premium()
+        except Exception as e:
+            self.fail(f"plot_Vehicle_premium raised an exception: {e}")
+
+    def test_plot_vehicle_total_claims(self):
+        try:
+            self.insurance.plot_Vehicle_TotalClaims()
+        except Exception as e:
+            self.fail(f"plot_Vehicle_TotalClaims raised an exception: {e}")
+
+    def test_outlier_all_num_co(self):
+        try:
+            self.insurance.outlier_all_num_co()
+        except Exception as e:
+            self.fail(f"outlier_all_num_co raised an exception: {e}")
 
 if __name__ == '__main__':
     unittest.main()

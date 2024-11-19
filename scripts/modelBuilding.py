@@ -103,7 +103,7 @@ class InsuranceModeling:
         return [
             'Citizenship', 'LegalType', 'Title', 'Language', 'Bank', 
             'AccountType', 'Gender', 'Country', 'Province', 'PostalCode', 
-            'MainCrestaZone', 'SubCrestaZone', 'ItemType', 'VehicleType', 
+            'MainCrestaZone', 'SubCrestaZone', 'ItemType', 'VehicleType', 'MaritalStatus',
             'RegistrationYear', 'Model', 'Cylinders', 'NumberOfDoors', 
             'VehicleAge', 'AlarmImmobiliser', 'TrackingDevice', 
             'CapitalOutstanding', 'IsNewVehicle'
